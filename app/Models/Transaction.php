@@ -21,7 +21,7 @@ class Transaction extends Model
         'total_days',
         'fee',
         'total_price',
-        'status',
+        'status'
     ];
 
     public function setListingIdAttribute($value)
@@ -38,14 +38,23 @@ class Transaction extends Model
         $this->attributes['total_price'] = $totalPrice + $fee;
     }
 
+    /**
+     * Get the user that owns the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-
+    /**
+     * Get the listing that owns the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function listing(): BelongsTo
     {
-        return $this->belongsTo(listing::class);
+        return $this->belongsTo(Listing::class);
     }
 }

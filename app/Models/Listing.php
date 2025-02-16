@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class listing extends Model
+class Listing extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -16,7 +17,7 @@ class listing extends Model
         'slug',
         'description',
         'address',
-        'sqtf',
+        'sqft',
         'wife_speed',
         'max_person',
         'price_per_day',
@@ -24,25 +25,30 @@ class listing extends Model
         'full_support_available',
         'gym_area_available',
         'mini_cafe_available',
-        'cinema_available',
+        'cinema_available'
     ];
 
     protected $casts = [
-        'attachments' => 'array',
+        'attachments' => 'array'
     ];
 
-    function getRouteKeyName()
+    public function getRouteKeyName()
     {
         return 'slug';
     }
 
-    function setTitleAttribute($value)
+    public function setTitleAttribute($value)
     {
         $this->attributes['title'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function transactions()
+    /**
+     * Get all of the transaction for the Listing
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transaction(): HasMany
     {
         return $this->hasMany(Transaction::class);
     }
