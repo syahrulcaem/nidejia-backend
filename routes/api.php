@@ -15,4 +15,5 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::resource('listing', ListingController::class)->only(['index', 'show']); // Ensure the ListingController class exists in the specified namespace
 Route::post('transaction/is-available', [TransactionController::class, 'isAvailable'])->middleware(['auth:sanctum']);
+Route::resource('transaction', TransactionController::class)->only(['store', 'index', 'show'])->middleware(['auth:sanctum']);
 require __DIR__ . '/auth.php';

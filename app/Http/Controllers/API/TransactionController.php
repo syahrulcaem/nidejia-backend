@@ -12,6 +12,17 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TransactionController extends Controller
 {
+
+    public function index()
+    {
+        $transactions = Transaction::whereUserId(auth()->id())->paginate();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction List',
+            'data' => $transactions,
+        ]);
+    }
     private function _fullyBookedChecker(Store $request)
     {
         $listing = Listing::find($request->listing_id);
@@ -49,6 +60,46 @@ class TransactionController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Listing Available',
+        ]);
+    }
+
+    public function store(Store $request)
+    {
+        $this->_fullyBookedChecker($request);
+
+        $transaction = Transaction::create([
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'listing_id' => $request->listing_id,
+            'user_id' => auth()->id(),
+        ]);
+
+        $transaction->Listing;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction Created',
+            'data' => $transaction,
+        ]);
+    }
+
+    public function Show(Transaction $transaction): JsonResponse
+    {
+        if ($transaction->user_id !== auth()->id()) {
+            throw new HttpResponseException(
+                response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized',
+                ], JsonResponse::HTTP_UNAUTHORIZED)
+            );
+        }
+
+        $transaction->Listing;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction Details',
+            'data' => $transaction,
         ]);
     }
 }
